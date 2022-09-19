@@ -13,9 +13,9 @@ Home
             <h5 class="card-title">{{ post.title }}</h5>
             <p>{{ post.description }}</p>
         </div>
-        <div>
-            {% if user == post.author %}
-            <form method="post" >
+        <div>d
+            {% if user == post.author or perms.main.delete_post %}
+            <form method="post  " >
                 {% csrf_token %}
                 <button type="submit" class="btn btn-danger" value="{{ post.id }}" name="post-id">Delete</button>
             </form>

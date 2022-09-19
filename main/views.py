@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from main.forms import SignUpForm, PostForm
 from django.contrib.auth import login, logout, authenticate
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required
 
 # Create your views here.
 from main.models import Post
@@ -14,7 +14,7 @@ def home(request):
     if request.method == 'POST':
         post_id = request.POST.get('post-id')
         post = Post.objects.filter(id=post_id).first()
-        if post and post.author == request.user:
+        if post and (post.author == request.user or request.user.has_perm('main.delete_post')):
             post.delete()
     return render(request, 'main/home.html', {'posts': all_posts})
 
@@ -32,6 +32,7 @@ def sign_up(request):
 
 
 @login_required(login_url='/login')
+@permission_required('main.add_post', login_url='/login', raise_exception=True)
 def create_post(request):
     if request.method == 'POST':
         form = PostForm(request.POST)
