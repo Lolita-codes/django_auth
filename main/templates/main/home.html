@@ -13,11 +13,17 @@ Home
             <h5 class="card-title">{{ post.title }}</h5>
             <p>{{ post.description }}</p>
         </div>
-        <div>d
+        <div>
             {% if user == post.author or perms.main.delete_post %}
-            <form method="post  " >
+            <form method="post" >
                 {% csrf_token %}
                 <button type="submit" class="btn btn-danger" value="{{ post.id }}" name="post-id">Delete</button>
+            </form>
+            {% endif %}
+            {% if user.is_staff %}
+             <form method="post">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-warning" value="{{ post.author.id }}" name="user-id">Ban User</button>
             </form>
             {% endif %}
         </div>
